@@ -1,0 +1,28 @@
+version: '3.7'
+
+networks:
+    default-network:
+        driver: bridge
+
+services:
+    app:
+        build:
+            context: .
+        ports:
+            - 3000:3000
+        volumes:
+            - ./src:/var/www
+            - ./src/storage/uploads:/var/www/storage/uploads
+        command: npm run dev
+        environment:
+            MONGO_HOST: database
+        networks:
+            - default-network
+        depends_on:
+            - database
+    database:
+        image: mongo
+        networks:
+            - default-network
+        volumes:
+            - ./data:/data/db
